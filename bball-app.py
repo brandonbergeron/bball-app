@@ -60,7 +60,9 @@ st.header('RDream Team Selector')
 st.subheader('Choose your positions:')
 
 #---DataFrame read in with some null values removed
-df = pd.read_csv(st.file_uploader('File uploader'), index_col=0) #---'./data/final_players.csv'
+#df = pd.read_csv(st.file_uploader('File uploader'), index_col=0) #---'./data/final_players.csv'
+
+df = pd.read_csv('./final_players.csv', index_col=0)
 df = df[df['Pos'].isna() == 0]
 df = df[df['Pos'].str.contains('Did Not Play') == False]
 
