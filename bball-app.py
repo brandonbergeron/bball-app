@@ -57,7 +57,9 @@ def get_score(x):
         return -1
 
 st.header('RDream Team Selector')
-st.subheader('Choose your positions:')
+#st.subheader('Choose your positions:')
+
+st.subheader('Choose desired stats for each position:')
 
 #---DataFrame read in with some null values removed
 #df = pd.read_csv(st.file_uploader('File uploader'), index_col=0) #---'./data/final_players.csv'
@@ -110,13 +112,26 @@ df['TOV'] = np.negative(df['TOV'])
 #---Calculates Composite Score
 df['composite'] = [get_score(df.iloc[i]) for i in range(len(df))]
 
+pg_df = df.loc[df['Pos'] == 'PG', ['name', 'composite']].sort_values('composite', ascending=False).head(10)
+pg_df.index = np.arange(1, len(pg_df) + 1)
+sf_df = df.loc[df['Pos'] == 'SF', ['name', 'composite']].sort_values('composite', ascending=False).head(10)
+sf_df.index = np.arange(1, len(sf_df) + 1)
+sg_df = df.loc[df['Pos'] == 'SG', ['name', 'composite']].sort_values('composite', ascending=False).head(10)
+sg_df.index = np.arange(1, len(sg_df) + 1)
+pf_df = df.loc[df['Pos'] == 'PF', ['name', 'composite']].sort_values('composite', ascending=False).head(10)
+pf_df.index = np.arange(1, len(pf_df) + 1)
+c_df = df.loc[df['Pos'] == 'C', ['name', 'composite']].sort_values('composite', ascending=False).head(10)
+c_df.index = np.arange(1, len(c_df) + 1)
+
+
+
 st.subheader('Point Guards:')
-st.dataframe(df.loc[df['Pos'] == 'PG', ['name', 'composite']].sort_values('composite', ascending=False).head(10))
+st.dataframe(pg_df['name'])
 st.subheader('Small Forwards:')
-st.dataframe(df.loc[df['Pos'] == 'SF', ['name', 'composite']].sort_values('composite', ascending=False).head(10))
+st.dataframe(sf_df['name'])
 st.subheader('Shooting Guards:')
-st.dataframe(df.loc[df['Pos'] == 'SG', ['name', 'composite']].sort_values('composite', ascending=False).head(10))
+st.dataframe(sg_df['name'])
 st.subheader('Power Forwards:')
-st.dataframe(df.loc[df['Pos'] == 'PF', ['name', 'composite']].sort_values('composite', ascending=False).head(10))
+st.dataframe(pf_df['name'])
 st.subheader('Centers:')
-st.dataframe(df.loc[df['Pos'] == 'C', ['name', 'composite']].sort_values('composite', ascending=False).head(10))
+st.dataframe(c_df['name'])
