@@ -5,12 +5,12 @@ from sklearn.preprocessing import MinMaxScaler
 
 
 #---Display dict
-display_dict = {'Hall of Famer': 'HOF',
- 'Season': 'Season',
- 'Age': 'Age',
- 'Team': 'Tm',
- 'League': 'Lg',
- 'Position': 'Pos',
+display_dict = {#'Hall of Famer': 'HOF',
+ #'Season': 'Season',
+ #'Age': 'Age',
+ #'Team': 'Tm',
+ #'League': 'Lg',
+ #'Position': 'Pos',
  'Games': 'G',
  'Games Started': 'GS',
  'Minutes Played': 'MP',
