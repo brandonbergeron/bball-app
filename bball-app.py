@@ -5,14 +5,14 @@ from sklearn.preprocessing import MinMaxScaler
 
 
 #---Display dict
-display_dict = {'Hall of Famer': 'HOF',
- 'Season': 'Season',
- 'Age': 'Age',
- 'Team': 'Tm',
- 'League': 'Lg',
- 'Position': 'Pos',
- 'Games': 'G',
- 'Games Started': 'GS',
+display_dict = {#'Hall of Famer': 'HOF',
+ #'Season': 'Season',
+ #'Age': 'Age',
+ #'Team': 'Tm',
+ #'League': 'Lg',
+ #'Position': 'Pos',
+ #'Games': 'G',
+ #'Games Started': 'GS',
  'Minutes Played': 'MP',
  'Field Goals': 'FG',
  'Field Goal Attempts': 'FGA',
@@ -57,10 +57,14 @@ def get_score(x):
         return -1
 
 st.header('RDream Team Selector')
-st.subheader('Choose your positions:')
+#st.subheader('Choose your positions:')
+
+st.subheader('Choose desired stats for each position:')
 
 #---DataFrame read in with some null values removed
-df = pd.read_csv(st.file_uploader('File uploader'), index_col=0) #---'./data/final_players.csv'
+#df = pd.read_csv(st.file_uploader('File uploader'), index_col=0) #---'./data/final_players.csv'
+
+df = pd.read_csv('./top_players_by_season.csv', index_col=0)
 df = df[df['Pos'].isna() == 0]
 df = df[df['Pos'].str.contains('Did Not Play') == False]
 
@@ -107,14 +111,40 @@ df['TOV'] = np.negative(df['TOV'])
 
 #---Calculates Composite Score
 df['composite'] = [get_score(df.iloc[i]) for i in range(len(df))]
+#---
+df[scale_list] = mms.inverse_transform(df[scale_list])
 
+
+pg_df = df.loc[df['Pos'] == 'PG'].sort_values('composite', ascending=False).head(10)
+pg_df.index = np.arange(1, len(pg_df) + 1)
+sf_df = df.loc[df['Pos'] == 'SF'].sort_values('composite', ascending=False).head(10)
+sf_df.index = np.arange(1, len(sf_df) + 1)
+sg_df = df.loc[df['Pos'] == 'SG'].sort_values('composite', ascending=False).head(10)
+sg_df.index = np.arange(1, len(sg_df) + 1)
+pf_df = df.loc[df['Pos'] == 'PF'].sort_values('composite', ascending=False).head(10)
+pf_df.index = np.arange(1, len(pf_df) + 1)
+c_df = df.loc[df['Pos'] == 'C'].sort_values('composite', ascending=False).head(10)
+c_df.index = np.arange(1, len(c_df) + 1)
+
+
+
+#---------Printing tables of result rankings
 st.subheader('Point Guards:')
-st.dataframe(df.loc[df['Pos'] == 'PG', ['name', 'composite']].sort_values('composite', ascending=False).head(10))
-st.subheader('Small Forwards:')
-st.dataframe(df.loc[df['Pos'] == 'SF', ['name', 'composite']].sort_values('composite', ascending=False).head(10))
+if len(pg_stat_columns) > 0:
+    st.dataframe(pg_df[['name', 'Tm', 'Season', 'Pos'] + pg_stat_columns])
+
 st.subheader('Shooting Guards:')
-st.dataframe(df.loc[df['Pos'] == 'SG', ['name', 'composite']].sort_values('composite', ascending=False).head(10))
+if len(sg_stat_columns) > 0:
+    st.dataframe(sg_df[['name', 'Tm', 'Season', 'Pos'] + sg_stat_columns])
+
+st.subheader('Small Forwards:')
+if len(sf_stat_columns) > 0:
+    st.dataframe(sf_df[['name', 'Tm', 'Season', 'Pos'] + sf_stat_columns])
+
 st.subheader('Power Forwards:')
-st.dataframe(df.loc[df['Pos'] == 'PF', ['name', 'composite']].sort_values('composite', ascending=False).head(10))
+if len(pf_stat_columns) > 0:
+    st.dataframe(pf_df[['name', 'Tm', 'Season', 'Pos'] + pf_stat_columns])
+
 st.subheader('Centers:')
-st.dataframe(df.loc[df['Pos'] == 'C', ['name', 'composite']].sort_values('composite', ascending=False).head(10))
+if len(c_stat_columns) > 0:
+    st.dataframe(c_df[['name', 'Tm', 'Season', 'Pos'] + c_stat_columns])
